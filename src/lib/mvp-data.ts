@@ -1,58 +1,84 @@
-import { RoleExperience } from "@/lib/domain";
+import { AppView, NavItem, RoleExperience, UserRole } from "@/lib/domain";
+
+export const appNavigation: NavItem[] = [
+  { id: "dashboard", label: "Heute", shortLabel: "Heute" },
+  { id: "jobs", label: "Einsaetze", shortLabel: "Jobs" },
+  { id: "applications", label: "Bewerbungen", shortLabel: "Apps" },
+  { id: "trust", label: "Trust", shortLabel: "Trust" },
+  { id: "profile", label: "Profil", shortLabel: "Profil" }
+];
 
 export const architectureLayers = [
   {
-    title: "App Layer",
+    title: "Experience Layer",
     detail:
-      "Next.js App Router mit klar getrennten Flows fuer Babysitter, Familien und Admin. Server Components fuer lesende Daten, spaeter Server Actions fuer Mutationen."
+      "Mobile-first App Shell in Next.js mit klaren Arbeitsbereichen fuer Babysitter, Familien und Admin."
   },
   {
-    title: "Domain Layer",
+    title: "Workflow Layer",
     detail:
-      "Klare Statusmodelle fuer Profile, Auftraege, Bewerbungen, Matches, Bewertungen und Safety-Faelle. Keine impliziten Seiteneffekte."
+      "Statusgetriebene Prozesse fuer Auftraege, Bewerbungen, Matching, Kontaktfreigabe und Bewertungen."
   },
   {
     title: "Trust Layer",
     detail:
-      "Kontaktdaten bleiben bis zur Zusage verborgen. Verifikation, Moderation, Audit-Logs und Admin-Eingriffe sind Kernfunktionen des Produkts."
+      "Verifikation, Moderation, Audit-Log und datensparsame Kontaktlogik als Pflichtbestandteile des Produkts."
   },
   {
     title: "Data Layer",
     detail:
-      "Im MVP fuer die UI mit Demo-Daten befuellt. In Phase 2 fuer Supabase-Tabellen, RLS-Rollen, Storage und Benachrichtigungen vorbereitet."
+      "Supabase fuer Auth, Postgres, RLS, Storage und spaetere Benachrichtigungen. Im UI jetzt bereits vorbereitet."
   }
 ];
 
 export const releasePhases = [
-  "Phase 1: Rollen, Profile, Auftragsfluss, Bewerbungen, Matching und Admin-Monitoring",
-  "Phase 2: Auth, Supabase-Datenmodell, RLS, Verifikation, Dateiuploads und Benachrichtigungen",
-  "Phase 3: Chat, Zahlungen, Wiederbuchungen, Eskalationsfaelle und operative Automatisierungen"
+  "Phase 1: App Frame, Rollen, Profil, Einsaetze, Bewerbungen, Matching und Admin Queue",
+  "Phase 2: Supabase Auth, Tabellen, RLS, Onboarding, Dokumente und Dateiuploads",
+  "Phase 3: Chat, Zahlungen, Wiederbuchung, Notfalllogik und operative Automationen"
 ];
 
 export const roleExperiences: RoleExperience[] = [
   {
     role: "family",
     label: "Familie",
-    heading: "Schnell einen sicheren Einsatz besetzen",
+    heading: "Schnell besetzen, ohne private Daten frueh preiszugeben",
     intro:
-      "Familien sehen nur relevante Kandidat:innen, arbeiten mit klaren Statuswechseln und geben Kontaktdaten erst nach Zusage frei.",
+      "Familien verwalten aktive Gesuche, vergleichen passende Bewerbungen und oeffnen Kontaktdaten erst nach dokumentierter Zusage.",
     priorities: [
-      "Auftrag mit Datum, Ort, Kinderzahl und Anforderungen erfassen",
-      "Bewerbungen mit Verifikationshinweisen und Reaktionszeit vergleichen",
-      "Auswahl dokumentieren und Kontaktdaten erst nach Match oeffnen"
+      "Job mit Datum, Ort, Alter der Kinder und Anforderungen erfassen",
+      "Bewerbungen nach Vertrauenssignalen und Reaktionszeit vergleichen",
+      "Auswahl, Kontaktfreigabe und Einsatzstatus ohne Graubereiche steuern"
     ],
     trustChecklist: [
       {
-        label: "Kontaktfreigabe",
-        detail: "Telefon und genaue Adresse bleiben verborgen, bis ein Babysitter bestaetigt wurde."
+        label: "Kontakt bleibt gesperrt",
+        detail: "Adresse und Telefonnummer werden erst nach akzeptiertem Match freigegeben."
       },
       {
-        label: "Bewertungen nur nach Einsatz",
-        detail: "Bewertungen werden erst nach einem abgeschlossenen Einsatz freigeschaltet."
+        label: "Nur echte Bewertungen",
+        detail: "Bewertungen werden erst nach completed-Einsaetzen freigeschaltet."
       },
       {
-        label: "Statusklarheit",
-        detail: "Jeder Auftrag wechselt nachvollziehbar von veroeffentlicht bis abgeschlossen oder storniert."
+        label: "Jeder Status ist pruefbar",
+        detail: "Von published bis completed wird jeder Wechsel im Audit-Protokoll abgelegt."
+      }
+    ],
+    metrics: [
+      { label: "Aktive Gesuche", value: "3", helper: "2 heute mit neuen Bewerbungen" },
+      { label: "Shortlist", value: "5", helper: "davon 2 verifiziert" },
+      { label: "Offene Entscheidungen", value: "2", helper: "Rueckmeldung heute noetig" }
+    ],
+    onboardingStage: "Familienprofil vollstaendig, Kontaktfreigabe-Regeln aktiv",
+    queue: [
+      {
+        label: "Heute entscheiden",
+        value: "Freitagabend fuer 2 Kinder",
+        detail: "2 starke Kandidatinnen, Kontakt noch gesperrt"
+      },
+      {
+        label: "Naechster Schritt",
+        value: "Betreuung am Mittwoch",
+        detail: "Jobtext kurz erweitern, damit passende Bewerbungen reinkommen"
       }
     ],
     jobs: [
@@ -60,25 +86,37 @@ export const roleExperiences: RoleExperience[] = [
         id: "job-101",
         title: "Freitagabend fuer 2 Kinder",
         city: "Berlin Prenzlauer Berg",
-        date: "2026-05-08",
+        date: "08 Mai",
         hours: "18:00-23:30",
-        pay: "17 EUR / Stunde",
+        pay: "17 EUR / Std.",
         status: "under_review",
         children: "2 Kinder, 4 und 7 Jahre",
-        requirements: ["Erfahrung mit Abendroutine", "Nichtraucher:in", "Deutsch fliessend"],
+        requirements: ["Abendroutine", "Nichtraucher:in", "Deutsch fliessend"],
         contactUnlocked: false
       },
       {
         id: "job-087",
         title: "Nachmittagsbetreuung am Mittwoch",
         city: "Berlin Mitte",
-        date: "2026-05-13",
+        date: "13 Mai",
         hours: "15:00-18:30",
-        pay: "16 EUR / Stunde",
+        pay: "16 EUR / Std.",
         status: "published",
         children: "1 Kind, 6 Jahre",
-        requirements: ["Abholung von Schule", "Hausaufgabenbetreuung"],
+        requirements: ["Schulabholung", "Hausaufgaben", "U-Bahn vertraut"],
         contactUnlocked: false
+      },
+      {
+        id: "job-052",
+        title: "Samstag mit Kleinkind",
+        city: "Berlin Friedrichshain",
+        date: "17 Mai",
+        hours: "10:30-14:00",
+        pay: "18 EUR / Std.",
+        status: "matched",
+        children: "1 Kind, 2 Jahre",
+        requirements: ["Kleinkind-Erfahrung", "Spielplatz", "Mittagsschlaf"],
+        contactUnlocked: true
       }
     ],
     applications: [
@@ -86,7 +124,7 @@ export const roleExperiences: RoleExperience[] = [
         id: "app-1",
         sitterName: "Mara K.",
         badges: ["Identitaet geprueft", "Erste Hilfe", "5 verifizierte Einsaetze"],
-        note: "Ich habe viel Erfahrung mit Abendroutinen und kann am Freitag komplett.",
+        note: "Erfahren mit Abendroutinen und an beiden angefragten Terminen verfuegbar.",
         status: "shortlisted",
         responseTime: "vor 18 Min."
       },
@@ -94,12 +132,20 @@ export const roleExperiences: RoleExperience[] = [
         id: "app-2",
         sitterName: "Hannah S.",
         badges: ["Ausweis eingereicht", "Studiert Paedagogik"],
-        note: "Ich wohne ganz in der Naehe und habe regelmaessige Betreuungserfahrung.",
+        note: "Wohnt in der Naehe und kann auch spontane Folgeeinsaetze uebernehmen.",
         status: "submitted",
         responseTime: "vor 47 Min."
       }
     ],
-    safetyCases: [],
+    safetyCases: [
+      {
+        id: "fam-safety-1",
+        title: "Anfrage nach privater Telefonnummer vor Auswahl",
+        severity: "attention",
+        owner: "Trust Bot",
+        nextAction: "Vorformulierte Antwort senden und Kontakt weiterhin sperren"
+      }
+    ],
     auditTrail: [
       {
         id: "audit-fam-1",
@@ -115,31 +161,68 @@ export const roleExperiences: RoleExperience[] = [
         action: "Kontakt verborgen gehalten",
         reason: "Noch kein bestaetigtes Match"
       }
+    ],
+    timeline: [
+      {
+        id: "fam-timeline-1",
+        title: "Bewerbungen eingegangen",
+        detail: "2 neue Bewerbungen mit Vertrauenshinweisen",
+        at: "Heute 12:34"
+      },
+      {
+        id: "fam-timeline-2",
+        title: "Match vorbereitet",
+        detail: "Bei Zusage werden Kontaktfelder serverseitig freigeschaltet",
+        at: "Heute 14:10"
+      }
+    ],
+    profileSummary: [
+      { label: "Haushalt", value: "Berlin Prenzlauer Berg" },
+      { label: "Kinder", value: "2 Kinder, 4 und 7 Jahre" },
+      { label: "Wunschprofil", value: "Erfahrung, Erste Hilfe, ruhige Abendroutine", emphasis: true }
     ]
   },
   {
     role: "babysitter",
     label: "Babysitter",
-    heading: "Vertrauen aufbauen und passende Jobs finden",
+    heading: "Passende Jobs sehen und Vertrauen sichtbar machen",
     intro:
-      "Babysitter praesentieren sich mit verifizierbaren Profilen, sehen nur passende Einsaetze und wissen jederzeit, was fuer eine Zusage noch fehlt.",
+      "Babysitter verwalten Profil, Verifikation und Verfuegbarkeit, sehen passende Jobs und verfolgen Bewerbungen ohne Informationschaos.",
     priorities: [
-      "Profil mit Verifikation, Verfuegbarkeit und Erfahrung pflegen",
-      "Nur passende Einsaetze sehen und mit strukturierter Bewerbung reagieren",
-      "Nach Auswahl Bestätigung, Einsatzstatus und Bewertung sauber nachverfolgen"
+      "Profil mit Nachweisen, Skills und Verfuegbarkeit pflegen",
+      "Relevante Einsaetze filtern und strukturiert bewerben",
+      "Nach Zusage Einsatz, Kontaktfreigabe und Bewertung nachvollziehen"
     ],
     trustChecklist: [
       {
-        label: "Verifikation sichtbar",
-        detail: "Identitaets-, Erste-Hilfe- und Erfahrungsnachweise werden als klare Signale im Profil dargestellt."
+        label: "Verifikation wirkt im Matching",
+        detail: "Gepruefte Ausweise und Erste-Hilfe-Nachweise erscheinen direkt an der Bewerbung."
       },
       {
-        label: "Datensparsamkeit",
-        detail: "Private Kontaktdaten der Familie sind vor der Zusage nicht sichtbar."
+        label: "Familienkontakt bleibt privat",
+        detail: "Adresse und Telefon werden erst nach accepted oder matched sichtbar."
       },
       {
-        label: "Faire Bewertungen",
-        detail: "Bewertungen koennen nur aus echten, abgeschlossenen Einsaetzen entstehen."
+        label: "Fairer Review Flow",
+        detail: "Bewertungen entstehen nur aus bestaetigten und abgeschlossenen Einsaetzen."
+      }
+    ],
+    metrics: [
+      { label: "Passende Jobs", value: "8", helper: "davon 3 mit Sofortbedarf" },
+      { label: "Offene Bewerbungen", value: "2", helper: "1 mit hoher Match-Chance" },
+      { label: "Vertrauensscore", value: "4.9", helper: "5 verifizierte Einsaetze" }
+    ],
+    onboardingStage: "Profil fast live, nur Verfuegbarkeit fuer Samstag fehlt",
+    queue: [
+      {
+        label: "Heute abschliessen",
+        value: "Verfuegbarkeit bestaetigen",
+        detail: "Ohne Samstags-Slot sinkt das Matching"
+      },
+      {
+        label: "Neu im Feed",
+        value: "Freitagabend fuer 2 Kinder",
+        detail: "Starker Match auf Abendroutine und Wohnort"
       }
     ],
     jobs: [
@@ -147,9 +230,9 @@ export const roleExperiences: RoleExperience[] = [
         id: "job-101",
         title: "Freitagabend fuer 2 Kinder",
         city: "Berlin Prenzlauer Berg",
-        date: "2026-05-08",
+        date: "08 Mai",
         hours: "18:00-23:30",
-        pay: "17 EUR / Stunde",
+        pay: "17 EUR / Std.",
         status: "under_review",
         children: "2 Kinder, 4 und 7 Jahre",
         requirements: ["Abendroutine", "Vorlesen", "Abendessen vorbereiten"],
@@ -159,13 +242,25 @@ export const roleExperiences: RoleExperience[] = [
         id: "job-099",
         title: "Samstag Mittag mit Kleinkind",
         city: "Berlin Friedrichshain",
-        date: "2026-05-09",
+        date: "09 Mai",
         hours: "11:00-15:00",
-        pay: "18 EUR / Stunde",
+        pay: "18 EUR / Std.",
         status: "matched",
         children: "1 Kind, 2 Jahre",
         requirements: ["Kleinkind-Erfahrung", "Spielplatzbegleitung"],
         contactUnlocked: true
+      },
+      {
+        id: "job-054",
+        title: "Schulabholung am Donnerstag",
+        city: "Berlin Kreuzberg",
+        date: "15 Mai",
+        hours: "15:00-18:00",
+        pay: "16 EUR / Std.",
+        status: "published",
+        children: "1 Kind, 8 Jahre",
+        requirements: ["Hausaufgaben", "zu Fuss erreichbar"],
+        contactUnlocked: false
       }
     ],
     applications: [
@@ -181,7 +276,7 @@ export const roleExperiences: RoleExperience[] = [
         id: "app-5",
         sitterName: "Du",
         badges: ["Identitaet geprueft", "Zusage erhalten"],
-        note: "Familie hat dich fuer Samstag ausgewaehlt. Adresse ist nun freigegeben.",
+        note: "Familie hat dich fuer Samstag ausgewaehlt. Adresse ist jetzt freigegeben.",
         status: "accepted",
         responseTime: "heute"
       }
@@ -202,31 +297,68 @@ export const roleExperiences: RoleExperience[] = [
         action: "Verifikation geprueft",
         reason: "Ausweis und Zertifikat vollstaendig"
       }
+    ],
+    timeline: [
+      {
+        id: "sit-timeline-1",
+        title: "Neuer Match-Kandidat",
+        detail: "Job in deinem Radius mit Abendroutine und fairer Bezahlung",
+        at: "Heute 12:09"
+      },
+      {
+        id: "sit-timeline-2",
+        title: "Kontakt entsperrt",
+        detail: "Fuer Samstag ist jetzt Adresse und Check-in sichtbar",
+        at: "Heute 13:40"
+      }
+    ],
+    profileSummary: [
+      { label: "Standort", value: "Berlin Friedrichshain" },
+      { label: "Nachweise", value: "Ausweis und Erste Hilfe verifiziert", emphasis: true },
+      { label: "Stil", value: "Abendroutine, Kleinkind, Hausaufgabenhilfe" }
     ]
   },
   {
     role: "admin",
     label: "Admin",
-    heading: "Vertrauen operativ absichern",
+    heading: "Trust und Operations priorisieren statt nur mitzulaufen",
     intro:
-      "Admins moderieren Nutzer:innen, pruefen Safety-Faelle, sehen kritische Statuswechsel und koennen sauber nachvollziehen, wer wann was getan hat.",
+      "Admins moderieren Profile, pruefen Verifikation, priorisieren Safety-Faelle und koennen jeden sensiblen Schritt im Audit nachvollziehen.",
     priorities: [
-      "Verifikationswarteschlangen und problematische Bewertungen triagieren",
-      "Kontaktfreigaben, Match-Status und Beschwerden nachvollziehen",
-      "Operative Eingriffe mit Audit-Historie dokumentieren"
+      "Verifikations- und Safety-Warteschlangen priorisiert bearbeiten",
+      "Kritische Eingriffe mit sauberer Begruendung und Audit-Historie ausfuehren",
+      "Kontaktfreigaben und Bewertungsregeln systematisch kontrollieren"
     ],
     trustChecklist: [
       {
-        label: "Moderation",
-        detail: "Verdachtige Bewertungen, Profile und Nachrichten muessen mit klaren Eingriffen gesperrt oder freigegeben werden koennen."
+        label: "Policy zuerst",
+        detail: "Kritische Faelle muessen hoeher priorisiert sein als normale Support-Anfragen."
       },
       {
-        label: "Auditierbarkeit",
-        detail: "Jeder sensible Schritt erzeugt einen nachvollziehbaren Eintrag im Admin-Protokoll."
+        label: "Account-Pausierung",
+        detail: "Bei fehlender Verifikation oder Beschwerden muss ein Profil sofort pausierbar sein."
       },
       {
-        label: "Safety zuerst",
-        detail: "Kritische Meldungen muessen schneller sichtbar sein als normale Operations-Themen."
+        label: "Nachvollziehbare Freigaben",
+        detail: "Jede Entsperrung von Kontakt- oder Bewertungsrechten wird begruendet gespeichert."
+      }
+    ],
+    metrics: [
+      { label: "Kritische Faelle", value: "2", helper: "innerhalb 30 Min. reagieren" },
+      { label: "Verifikation Queue", value: "7", helper: "3 mit fehlendem Dokument" },
+      { label: "Geblockte Reviews", value: "4", helper: "1 neue Beschwerde heute" }
+    ],
+    onboardingStage: "Admin-Panel aktiv, Eskalationsregeln fuer Level 1 definiert",
+    queue: [
+      {
+        label: "Sofort pruefen",
+        value: "Aktives Profil ohne vollstaendige Verifikation",
+        detail: "Profil pausieren, bis Dokument nachgereicht wurde"
+      },
+      {
+        label: "Heute entscheiden",
+        value: "Beschwerde zu kurzfristiger Absage",
+        detail: "Review vorlaeufig ausblenden, Vorfall klaeren"
       }
     ],
     jobs: [
@@ -234,16 +366,37 @@ export const roleExperiences: RoleExperience[] = [
         id: "job-099",
         title: "Samstag Mittag mit Kleinkind",
         city: "Berlin Friedrichshain",
-        date: "2026-05-09",
+        date: "09 Mai",
         hours: "11:00-15:00",
-        pay: "18 EUR / Stunde",
+        pay: "18 EUR / Std.",
         status: "confirmed",
         children: "1 Kind, 2 Jahre",
         requirements: ["Kontaktfreigabe protokolliert", "Bewertung spaeter freigeben"],
         contactUnlocked: true
+      },
+      {
+        id: "job-120",
+        title: "Abendbetreuung in Mitte",
+        city: "Berlin Mitte",
+        date: "14 Mai",
+        hours: "19:00-22:30",
+        pay: "17 EUR / Std.",
+        status: "under_review",
+        children: "2 Kinder, 5 und 9 Jahre",
+        requirements: ["Policy-Pruefung", "Kontakt weiterhin gesperrt"],
+        contactUnlocked: false
       }
     ],
-    applications: [],
+    applications: [
+      {
+        id: "ops-1",
+        sitterName: "Mara K.",
+        badges: ["Verifikation offen", "Profil live", "Dokument fehlt"],
+        note: "Live-Profil trotz fehlendem Zweitnachweis. Automatische Pause empfohlen.",
+        status: "submitted",
+        responseTime: "vor 6 Min."
+      }
+    ],
     safetyCases: [
       {
         id: "safety-1",
@@ -282,6 +435,62 @@ export const roleExperiences: RoleExperience[] = [
         action: "Kritischen Fall erstellt",
         reason: "Aktives Profil ohne vollstaendige Verifikation"
       }
+    ],
+    timeline: [
+      {
+        id: "admin-timeline-1",
+        title: "Automatische Eskalation",
+        detail: "Live-Profil ohne Nachweis in die kritische Queue geschoben",
+        at: "Heute 12:20"
+      },
+      {
+        id: "admin-timeline-2",
+        title: "Kontaktlogik bestaetigt",
+        detail: "Job-099 blieb bis zur Zusage vollstaendig gesperrt",
+        at: "Heute 12:16"
+      }
+    ],
+    profileSummary: [
+      { label: "Rolle", value: "Trust & Ops Admin", emphasis: true },
+      { label: "Verantwortung", value: "Moderation, Verifikation, Eskalationen" },
+      { label: "SLA", value: "Kritische Faelle in 30 Minuten" }
     ]
   }
 ];
+
+export function isRole(value: string | undefined): value is UserRole {
+  return value === "family" || value === "babysitter" || value === "admin";
+}
+
+export function isView(value: string | undefined): value is AppView {
+  return (
+    value === "dashboard" ||
+    value === "jobs" ||
+    value === "applications" ||
+    value === "trust" ||
+    value === "profile"
+  );
+}
+
+export function getExperience(role: UserRole) {
+  return roleExperiences.find((entry) => entry.role === role) ?? roleExperiences[0];
+}
+
+export function getRoleDefaults(role: UserRole) {
+  const defaults: Record<UserRole, AppView> = {
+    family: "dashboard",
+    babysitter: "jobs",
+    admin: "trust"
+  };
+
+  return defaults[role];
+}
+
+export function getViewTitle(role: UserRole, view: AppView) {
+  if (role === "admin" && view === "applications") {
+    return "Operations Queue";
+  }
+
+  const item = appNavigation.find((entry) => entry.id === view);
+  return item?.label ?? "Heute";
+}
