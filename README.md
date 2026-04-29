@@ -47,3 +47,5 @@ npm run dev
 ## Deployment
 
 Das Projekt ist fuer Deployment auf Vercel vorbereitet. Sobald das Repository auf GitHub liegt, kann Vercel direkt daraus bauen.
+
+Letzter Trigger fuer den ersten Vercel-Deploy: 2026-04-29.
