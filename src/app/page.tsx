@@ -1,46 +1,80 @@
 import { MvpWorkbench } from "@/components/mvp-workbench";
-import { architectureLayers, releasePhases, roleExperiences } from "@/lib/mvp-data";
+import {
+  architectureLayers,
+  getRoleDefaults,
+  isRole,
+  isView,
+  releasePhases,
+  roleExperiences
+} from "@/lib/mvp-data";
+import { getSupabaseStatus } from "@/lib/supabase/env";
 
-export default function Home() {
+type HomeProps = {
+  searchParams: Promise<{
+    role?: string;
+    view?: string;
+  }>;
+};
+
+export default async function Home({ searchParams }: HomeProps) {
+  const params = await searchParams;
+  const role = isRole(params.role) ? params.role : "family";
+  const view = isView(params.view) ? params.view : getRoleDefaults(role);
+  const supabase = getSupabaseStatus();
+
   return (
     <main className="page-shell">
-      <section className="intro-grid">
-        <div>
-          <p className="eyebrow">Babysitter Marketplace MVP</p>
-          <h1>Next.js-Struktur fuer eine vertrauenswuerdige Vermittlungsplattform</h1>
-          <p className="lead">
-            Dieses erste MVP zeigt die Kernlogik fuer Babysitter, Familien und
-            Admin. Fokus: klare Rollen, geschuetzte Kontaktdaten, saubere
-            Statuswechsel, verifizierbare Bewertungen und ein operatives
-            Moderations-Backend.
+      <MvpWorkbench
+        experiences={roleExperiences}
+        initialRole={role}
+        initialView={view}
+        supabase={supabase}
+      />
+
+      <section className="foundation-band">
+        <div className="foundation-head">
+          <div>
+            <p className="section-kicker">Produktgeruest</p>
+            <h2>Was dieser Frame schon abbildet</h2>
+          </div>
+          <p>
+            Das UI folgt deinem Marketplace-Konzept: Rollen sind getrennt, Kontakt bleibt geschuetzt,
+            Statuswechsel sind sichtbar und der Admin sieht eine echte Trust-Queue statt nur Zahlen.
           </p>
         </div>
-        <div className="surface architecture-panel">
-          <p className="eyebrow">Architektur</p>
-          <h2>Vier Schichten fuer den Start</h2>
-          <div className="stack">
-            {architectureLayers.map((layer) => (
-              <div className="line-item" key={layer.title}>
-                <strong>{layer.title}</strong>
-                <p>{layer.detail}</p>
+
+        <div className="foundation-grid">
+          <article className="panel">
+            <div className="panel-header">
+              <div>
+                <p className="section-kicker">Architektur</p>
+                <h3>Bausteine fuer den Start</h3>
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
+            </div>
+            <div className="list-stack">
+              {architectureLayers.map((layer) => (
+                <article className="line-card" key={layer.title}>
+                  <strong>{layer.title}</strong>
+                  <p>{layer.detail}</p>
+                </article>
+              ))}
+            </div>
+          </article>
 
-      <MvpWorkbench experiences={roleExperiences} />
-
-      <section className="roadmap-band">
-        <div>
-          <p className="eyebrow">Release-Plan</p>
-          <h2>Empfohlene Reihenfolge fuer die Umsetzung</h2>
+          <article className="panel">
+            <div className="panel-header">
+              <div>
+                <p className="section-kicker">Release-Plan</p>
+                <h3>Empfohlene Reihenfolge</h3>
+              </div>
+            </div>
+            <ol className="roadmap-list">
+              {releasePhases.map((phase) => (
+                <li key={phase}>{phase}</li>
+              ))}
+            </ol>
+          </article>
         </div>
-        <ol className="roadmap-list">
-          {releasePhases.map((phase) => (
-            <li key={phase}>{phase}</li>
-          ))}
-        </ol>
       </section>
     </main>
   );
