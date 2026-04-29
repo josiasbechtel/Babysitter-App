@@ -8,35 +8,6 @@ export const appNavigation: NavItem[] = [
   { id: "profile", label: "Profil", shortLabel: "Profil" }
 ];
 
-export const architectureLayers = [
-  {
-    title: "Experience Layer",
-    detail:
-      "Mobile-first App Shell in Next.js mit klaren Arbeitsbereichen fuer Babysitter, Familien und Admin."
-  },
-  {
-    title: "Workflow Layer",
-    detail:
-      "Statusgetriebene Prozesse fuer Auftraege, Bewerbungen, Matching, Kontaktfreigabe und Bewertungen."
-  },
-  {
-    title: "Trust Layer",
-    detail:
-      "Verifikation, Moderation, Audit-Log und datensparsame Kontaktlogik als Pflichtbestandteile des Produkts."
-  },
-  {
-    title: "Data Layer",
-    detail:
-      "Supabase fuer Auth, Postgres, RLS, Storage und spaetere Benachrichtigungen. Im UI jetzt bereits vorbereitet."
-  }
-];
-
-export const releasePhases = [
-  "Phase 1: App Frame, Rollen, Profil, Einsaetze, Bewerbungen, Matching und Admin Queue",
-  "Phase 2: Supabase Auth, Tabellen, RLS, Onboarding, Dokumente und Dateiuploads",
-  "Phase 3: Chat, Zahlungen, Wiederbuchung, Notfalllogik und operative Automationen"
-];
-
 export const roleExperiences: RoleExperience[] = [
   {
     role: "family",
@@ -122,6 +93,8 @@ export const roleExperiences: RoleExperience[] = [
     applications: [
       {
         id: "app-1",
+        jobId: "job-101",
+        jobTitle: "Freitagabend fuer 2 Kinder",
         sitterName: "Mara K.",
         badges: ["Identitaet geprueft", "Erste Hilfe", "5 verifizierte Einsaetze"],
         note: "Erfahren mit Abendroutinen und an beiden angefragten Terminen verfuegbar.",
@@ -130,6 +103,8 @@ export const roleExperiences: RoleExperience[] = [
       },
       {
         id: "app-2",
+        jobId: "job-101",
+        jobTitle: "Freitagabend fuer 2 Kinder",
         sitterName: "Hannah S.",
         badges: ["Ausweis eingereicht", "Studiert Paedagogik"],
         note: "Wohnt in der Naehe und kann auch spontane Folgeeinsaetze uebernehmen.",
@@ -266,6 +241,8 @@ export const roleExperiences: RoleExperience[] = [
     applications: [
       {
         id: "app-4",
+        jobId: "job-101",
+        jobTitle: "Freitagabend fuer 2 Kinder",
         sitterName: "Du",
         badges: ["Identitaet geprueft", "Erste Hilfe", "4.9 Bewertung"],
         note: "Bewerbung fuer Freitagabend gesendet. Rueckmeldung der Familie steht aus.",
@@ -274,6 +251,8 @@ export const roleExperiences: RoleExperience[] = [
       },
       {
         id: "app-5",
+        jobId: "job-099",
+        jobTitle: "Samstag Mittag mit Kleinkind",
         sitterName: "Du",
         badges: ["Identitaet geprueft", "Zusage erhalten"],
         note: "Familie hat dich fuer Samstag ausgewaehlt. Adresse ist jetzt freigegeben.",
@@ -390,6 +369,8 @@ export const roleExperiences: RoleExperience[] = [
     applications: [
       {
         id: "ops-1",
+        jobId: "job-120",
+        jobTitle: "Abendbetreuung in Mitte",
         sitterName: "Mara K.",
         badges: ["Verifikation offen", "Profil live", "Dokument fehlt"],
         note: "Live-Profil trotz fehlendem Zweitnachweis. Automatische Pause empfohlen.",
@@ -470,10 +451,6 @@ export function isView(value: string | undefined): value is AppView {
     value === "trust" ||
     value === "profile"
   );
-}
-
-export function getExperience(role: UserRole) {
-  return roleExperiences.find((entry) => entry.role === role) ?? roleExperiences[0];
 }
 
 export function getRoleDefaults(role: UserRole) {
