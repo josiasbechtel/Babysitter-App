@@ -69,6 +69,8 @@ export interface Job {
 
 export interface Application {
   id: string;
+  jobId: string;
+  jobTitle: string;
   sitterName: string;
   badges: string[];
   note: string;
